@@ -13,7 +13,7 @@ public abstract class RegionProcess extends ImageProcess {
     }
 
     @Override
-    public void process() {
+    public void processImage() {
         
     }
     
