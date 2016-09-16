@@ -8,9 +8,7 @@ import org.torax.commons.Image;
  */
 public class HistogramProcess extends PixelProcess<Histogram> {
 
-    /**
-     * Histogram data
-     */
+    /** Histogram data */
     private int[] histogramData;
 
     /**
@@ -44,12 +42,11 @@ public class HistogramProcess extends PixelProcess<Histogram> {
 
     /**
      * Returns the offset
-     * 
+     *
      * @return int
      */
     private int getOffset() {
         return (int) image.getPixelValueRange().getLower() * -1;
     }
-
 
 }

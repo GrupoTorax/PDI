@@ -10,7 +10,7 @@ import org.torax.commons.Image;
 public abstract class ImageProcess<O> implements Process {
 
     /** Image */
-    protected Image image;
+    protected final Image image;
     /** Output of the process */
     private O output;
     /** Process initializer */
@@ -57,17 +57,8 @@ public abstract class ImageProcess<O> implements Process {
      * 
      * @param output 
      */
-    public void setOutput(O output) {
+    protected void setOutput(O output) {
         this.output = output;
-    }
-
-    /**
-     * Returns the initializer
-     * 
-     * @return Runnable
-     */
-    public Runnable getInitializer() {
-        return initializer;
     }
 
     /**
@@ -75,17 +66,8 @@ public abstract class ImageProcess<O> implements Process {
      * 
      * @param initializer 
      */
-    public void setInitializer(Runnable initializer) {
+    protected void setInitializer(Runnable initializer) {
         this.initializer = initializer;
-    }
-
-    /**
-     * Returns the finalizer
-     * 
-     * @return Runnable
-     */
-    public Runnable getFinalizer() {
-        return finalizer;
     }
 
     /**
@@ -93,7 +75,7 @@ public abstract class ImageProcess<O> implements Process {
      * 
      * @param finalizer 
      */
-    public void setFinalizer(Runnable finalizer) {
+    protected void setFinalizer(Runnable finalizer) {
         this.finalizer = finalizer;
     }
     

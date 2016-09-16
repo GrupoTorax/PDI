@@ -9,7 +9,7 @@ import org.torax.commons.Image;
  * the threshold, and the higher boundary if the pixel is <b> higher than or 
  * equal to</b> the boundary.
  */
-public class ThresholdProcess extends PixelProcess {
+public class ThresholdProcess extends PixelProcess<Image> {
 
     /** Threshold */
     private final int threshold;
@@ -23,20 +23,14 @@ public class ThresholdProcess extends PixelProcess {
     public ThresholdProcess(Image image, int threshold) {
         super(image);
         this.threshold = threshold;
+        setFinalizer(() -> {
+            setOutput(image);
+        });
     }
 
     @Override
     protected void process(int channel, int x, int y, int value) {
         image.set(channel, x, y, applyThreshold(value));
-    }
-    
-    /**
-     * Returns the output image
-     * 
-     * @return Image
-     */
-    public Image getOutputImage() {
-        return image;
     }
 
     /**

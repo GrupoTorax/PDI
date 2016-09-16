@@ -23,7 +23,7 @@ public class ThresholdProcessTest {
         }, new Range<>(0, 100));
         ThresholdProcess process = new ThresholdProcess(image, 50);
         process.process();
-        Image output = process.getOutputImage();
+        Image output = process.getOutput();
         ImageAssert.assertImage(new Image(new int[][][] {
             {
                 {0, 0, 0, 0, 0, 0, 0, 100, 100, 100, 100, 100, 100, 100, 100},
