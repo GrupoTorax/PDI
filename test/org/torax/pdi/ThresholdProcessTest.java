@@ -1,6 +1,5 @@
 package org.torax.pdi;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
 import org.torax.commons.Image;
 import org.torax.commons.Range;
