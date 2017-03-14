@@ -17,6 +17,7 @@ public class ShadowCastingProcess extends ImageProcess<Image> {
      *
      * @param image
      * @param threshold
+     * @param orientations
      */
     public ShadowCastingProcess(Image image, int threshold, Orientation... orientations) {
         super(image);

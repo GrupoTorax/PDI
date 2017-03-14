@@ -37,7 +37,10 @@ public class HistogramProcess extends PixelProcess<Histogram> {
 
     @Override
     protected void process(int channel, int x, int y, int value) {
-        histogramData[value + getOffset()]++;
+        int index = value + getOffset();
+        if (index >= 0 && index < histogramData.length) {
+            histogramData[value + getOffset()]++;
+        }
     }
 
     /**

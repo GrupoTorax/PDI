@@ -1,9 +1,5 @@
 package org.torax.pdi;
 
-import java.util.Arrays;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
-import junit.framework.Assert;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.torax.commons.BinaryLabeling;

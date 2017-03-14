@@ -52,6 +52,20 @@ public class HistogramProcessTest {
     }
 
     /**
+     * Test of process getValueWithHighestOccurences, of class HistogramProcess
+     */
+    @Test
+    public void testGetValueWithMaxOccurences() {
+        HistogramProcess process = new HistogramProcess(buildTestImage());
+        process.process();
+        Histogram histogram = process.getOutput();
+        assertEquals(7, histogram.getValueWithMaxOccurences());
+        assertEquals(-2, histogram.getValueWithMaxOccurences(new Range<>(-100, 0)));
+        assertEquals(7, histogram.getValueWithMaxOccurences(new Range<>(0, 9)));
+        assertEquals(-1, histogram.getValueWithMaxOccurences(new Range<>(-1, 0)));
+    }
+
+    /**
      * Creates the test image
      * 
      * @return Image
