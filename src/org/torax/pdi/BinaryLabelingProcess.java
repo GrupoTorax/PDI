@@ -52,6 +52,15 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
     }
 
     /**
+     * Returns the last label used
+     *
+     * @return int
+     */
+    public int getLastLabel() {
+        return indexLabel - INITIAL_LABEL;
+    }
+    
+    /**
      * Returns a binary matrix
      *
      * @param label
