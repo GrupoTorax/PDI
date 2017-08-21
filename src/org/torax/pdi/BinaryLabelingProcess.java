@@ -2,10 +2,10 @@ package org.torax.pdi;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import org.torax.commons.BinaryLabeling;
+import org.torax.commons.Bounds;
 import org.torax.commons.Image;
 
 /**
@@ -149,11 +149,29 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
         
         /**
          * Sorts by size in decrescent order (Largest first)
+         * 
+         * @return the same list
          */
-        public void sortBySizeLargestFirst() {
+        public ObjectList sortBySizeLargestFirst() {
             sort((ExtractedObject o1, ExtractedObject o2) -> {
                 return o2.size - o1.size;
             });
+            return this;
+        }
+
+        @Override
+        public ObjectList subList(int fromIndex, int toIndex) {
+            return new ObjectList(super.subList(fromIndex, toIndex));
+        }
+
+        /**
+         * Returns a subset of this list
+         * 
+         * @param size
+         * @return ObjectList
+         */
+        public ObjectList subList(int size) {
+            return new ObjectList(super.subList(0, size));
         }
         
     }
@@ -169,6 +187,8 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
         private final boolean[][] matrix;
         /** Size */
         private int size;
+        /** Cached bounds */
+        private Bounds bounds;
 
         /**
          * Creates a new extracted object
@@ -197,6 +217,41 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
          */
         public boolean[][] getMatrix() {
             return matrix;
+        }
+        
+        /**
+         * Returns the bounds of the object
+         * 
+         * @return Bounds
+         */
+        public Bounds getBounds() {
+            if (bounds == null) {
+                int x1 = Integer.MAX_VALUE;
+                int y1 = Integer.MAX_VALUE;
+                int x2 = 0;
+                int y2 = 0;
+                for (int x = 0; x < matrix.length; x++) {
+                    for (int y = 0; y < matrix[x].length; y++) {
+                        if (!matrix[x][y]) {
+                            continue;
+                        }
+                        if (x < x1) {
+                            x1 = x;
+                        }
+                        if (x > x2) {
+                            x2 = x;
+                        }
+                        if (y < y1) {
+                            y1 = x;
+                        }
+                        if (y > y2) {
+                            y2 = x;
+                        }
+                    }
+                }
+                this.bounds = new Bounds(x1, y1, x2 - x1, y2 - y1);
+            }
+            return bounds;
         }
 
         /**
