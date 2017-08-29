@@ -19,6 +19,8 @@ public class ThresholdLimitProcess extends PixelProcess<Image> {
     private final int lowerReplaceValue;
     /** Higher replace value */
     private final int higherReplaceValue;
+    /** Center replace value */
+    private final Integer centerReplaceValue;
 
     /**
      * Creates a new threshold process
@@ -30,11 +32,26 @@ public class ThresholdLimitProcess extends PixelProcess<Image> {
      * @param higherReplaceValue
      */
     public ThresholdLimitProcess(Image image, int lowerThreshold, int higherThreshold, int lowerReplaceValue, int higherReplaceValue) {
+        this(image, lowerThreshold, higherThreshold, lowerReplaceValue, higherReplaceValue, null);
+    }
+
+    /**
+     * Creates a new threshold process
+     *
+     * @param image
+     * @param lowerThreshold
+     * @param higherThreshold
+     * @param lowerReplaceValue
+     * @param higherReplaceValue
+     * @param centerReplaceValue 
+     */
+    public ThresholdLimitProcess(Image image, int lowerThreshold, int higherThreshold, int lowerReplaceValue, int higherReplaceValue, Integer centerReplaceValue) {
         super(image);
         this.lowerThreshold = lowerThreshold;
         this.higherThreshold = higherThreshold;
         this.lowerReplaceValue = lowerReplaceValue;
         this.higherReplaceValue = higherReplaceValue;
+        this.centerReplaceValue = centerReplaceValue;
         setFinalizer(() -> {
             setOutput(image);
         });
@@ -58,7 +75,11 @@ public class ThresholdLimitProcess extends PixelProcess<Image> {
             if (value > higherThreshold) {
                 return higherReplaceValue;
             } else {
-                return value;
+                if (centerReplaceValue == null) {
+                    return value;
+                } else {
+                    return centerReplaceValue;
+                }
             }
         }
     }

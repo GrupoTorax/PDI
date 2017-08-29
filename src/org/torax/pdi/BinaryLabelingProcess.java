@@ -187,6 +187,8 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
         private final boolean[][] matrix;
         /** Size */
         private int size;
+        /** Perimeter */
+        private int perimeter;
         /** Cached bounds */
         private Bounds bounds;
 
@@ -199,6 +201,7 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
             this.label = label;
             this.matrix = new boolean[out.getWidth()][out.getHeight()];
             this.size = 0;
+            this.perimeter = -1;
         }
 
         /**
@@ -242,10 +245,10 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
                             x2 = x;
                         }
                         if (y < y1) {
-                            y1 = x;
+                            y1 = y;
                         }
                         if (y > y2) {
-                            y2 = x;
+                            y2 = y;
                         }
                     }
                 }
@@ -261,6 +264,33 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
          */
         public int getSize() {
             return size;
+        }
+        
+        public int getPerimeter() {
+            if (perimeter == -1) {
+                perimeter = 0;
+                for (int x = 0; x < matrix.length; x++) {
+                    for (int y = 0; y < matrix[x].length; y++) {
+                        if(matrix[x][y]) {
+                            if (x == 0 || y == 0 || x == matrix.length - 1 || y == matrix[x].length - 1) {
+                                perimeter++;
+                            } else {
+                                if(!matrix[x][y - 1] || !matrix[x - 1][y] || !matrix[x + 1][y] || !matrix[x][y + 1]) {
+                                    perimeter++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return perimeter;
+        }
+        
+        public double getCircularity() {
+            double p = getPerimeter();
+            double a = getSize();
+            double c = (p * p) / (4 * Math.PI * a);
+            return c;
         }
 
         @Override
