@@ -3,7 +3,7 @@ package org.torax.pdi;
 import org.torax.commons.Image;
 
 /**
- * Process for casting a "shadow" on the image, based on a threshhold
+ * Process for casting a "shadow" on the image, based on a threshold
  */
 public class ShadowCastingProcess extends ImageProcess<Image> {
 
