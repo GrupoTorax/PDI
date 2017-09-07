@@ -24,10 +24,10 @@ public class InvertColorProcess extends PixelProcess<Image> {
             resultImage = ImageFactory.buildEmptyImage();
         } else {
             resultImage = ImageFactory.
-                buildEmptyImage(image.getChannelCount(),
-                        image.getWidth(),
-                        image.getHeight(),
-                        image.getPixelValueRange());
+                    buildEmptyImage(image.getChannelCount(),
+                            image.getWidth(),
+                            image.getHeight(),
+                            image.getPixelValueRange());
         }
         this.invertedImage = resultImage;
         setFinalizer(() -> {
@@ -39,9 +39,8 @@ public class InvertColorProcess extends PixelProcess<Image> {
     protected void process(int channel, int x, int y, int value) {
         Range<Integer> range = invertedImage.getPixelValueRange();
         int normalizedValue = value - range.getLower();
-        int newValue = range.getLower() + ((int)range.getLength() + normalizedValue * -1);
+        int newValue = range.getLower() + ((int) range.getLength() - 1 + normalizedValue * -1);
         invertedImage.set(channel, x, y, newValue);
     }
 
-    
 }
