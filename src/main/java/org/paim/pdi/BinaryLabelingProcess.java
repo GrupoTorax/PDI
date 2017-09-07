@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import org.paim.commons.BinaryImage;
 import org.paim.commons.BinaryLabeling;
 import org.paim.commons.Bounds;
 import org.paim.commons.Image;
+import org.paim.commons.ImageFactory;
 
 /**
  * Binary labeling process
@@ -128,7 +130,7 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
                     map.put(label, object);
                 }
                 object.size++;
-                object.matrix[x][y] = true;
+                object.matrix.set(x, y, true);
             }
         }
         return new ObjectList(map.values());
@@ -184,7 +186,7 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
         /** Label of this object */
         private final int label;
         /** Matrix of this object */
-        private final boolean[][] matrix;
+        private final BinaryImage matrix;
         /** Size */
         private int size;
         /** Perimeter */
@@ -199,7 +201,7 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
          */
         public ExtractedObject(int label) {
             this.label = label;
-            this.matrix = new boolean[out.getWidth()][out.getHeight()];
+            this.matrix = new BinaryImage(ImageFactory.buildBinaryImage(out.getWidth(), out.getHeight()));
             this.size = 0;
             this.perimeter = -1;
         }
@@ -216,9 +218,9 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
         /**
          * Returns the matrix of this object
          * 
-         * @return matrix
+         * @return BinaryImage
          */
-        public boolean[][] getMatrix() {
+        public BinaryImage getMatrix() {
             return matrix;
         }
         
@@ -233,9 +235,9 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
                 int y1 = Integer.MAX_VALUE;
                 int x2 = 0;
                 int y2 = 0;
-                for (int x = 0; x < matrix.length; x++) {
-                    for (int y = 0; y < matrix[x].length; y++) {
-                        if (!matrix[x][y]) {
+                for (int x = 0; x < matrix.getWidth(); x++) {
+                    for (int y = 0; y < matrix.getHeight(); y++) {
+                        if (!matrix.get(x, y)) {
                             continue;
                         }
                         if (x < x1) {
@@ -269,13 +271,13 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
         public int getPerimeter() {
             if (perimeter == -1) {
                 perimeter = 0;
-                for (int x = 0; x < matrix.length; x++) {
-                    for (int y = 0; y < matrix[x].length; y++) {
-                        if(matrix[x][y]) {
-                            if (x == 0 || y == 0 || x == matrix.length - 1 || y == matrix[x].length - 1) {
+                for (int x = 0; x < matrix.getWidth(); x++) {
+                    for (int y = 0; y < matrix.getHeight(); y++) {
+                        if(matrix.get(x, y)) {
+                            if (x == 0 || y == 0 || x == matrix.getWidth() - 1 || y == matrix.getHeight() - 1) {
                                 perimeter++;
                             } else {
-                                if(!matrix[x][y - 1] || !matrix[x - 1][y] || !matrix[x + 1][y] || !matrix[x][y + 1]) {
+                                if(!matrix.get(x, y - 1) || !matrix.get(x - 1, y) || !matrix.get(x + 1, y) || !matrix.get(x, y + 1)) {
                                     perimeter++;
                                 }
                             }
