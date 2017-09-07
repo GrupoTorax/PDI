@@ -4,7 +4,7 @@ import org.paim.commons.Image;
 
 /**
  * Process that works on top of a image
- * 
+ *
  * @param <O> output type
  */
 public abstract class ImageProcess<O> implements Process {
@@ -20,8 +20,8 @@ public abstract class ImageProcess<O> implements Process {
 
     /**
      * Creates a new image process
-     * 
-     * @param image 
+     *
+     * @param image
      */
     public ImageProcess(Image image) {
         this.image = image;
@@ -32,7 +32,9 @@ public abstract class ImageProcess<O> implements Process {
         if (initializer != null) {
             initializer.run();
         }
-        processImage();
+        if (image != null) {
+            processImage();
+        }
         if (finalizer != null) {
             finalizer.run();
         }
@@ -42,10 +44,10 @@ public abstract class ImageProcess<O> implements Process {
      * Process the image
      */
     protected abstract void processImage();
-    
+
     /**
      * Returns the output
-     * 
+     *
      * @return O
      */
     public O getOutput() {
@@ -54,8 +56,8 @@ public abstract class ImageProcess<O> implements Process {
 
     /**
      * Sets the output
-     * 
-     * @param output 
+     *
+     * @param output
      */
     protected void setOutput(O output) {
         this.output = output;
@@ -63,8 +65,8 @@ public abstract class ImageProcess<O> implements Process {
 
     /**
      * Sets the initializer
-     * 
-     * @param initializer 
+     *
+     * @param initializer
      */
     protected void setInitializer(Runnable initializer) {
         this.initializer = initializer;
@@ -72,11 +74,11 @@ public abstract class ImageProcess<O> implements Process {
 
     /**
      * Sets the finalizer
-     * 
-     * @param finalizer 
+     *
+     * @param finalizer
      */
     protected void setFinalizer(Runnable finalizer) {
         this.finalizer = finalizer;
     }
-    
+
 }
