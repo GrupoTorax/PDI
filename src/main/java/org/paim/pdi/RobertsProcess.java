@@ -1,7 +1,6 @@
 package org.paim.pdi;
 
 import org.paim.commons.Image;
-import org.paim.commons.ImageFactory;
 
 /**
  * Roberts process for edge detection

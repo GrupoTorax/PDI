@@ -43,7 +43,6 @@ public class GaussKernelGenerator {
         // now sample kernel taps and calculate tap weights
         for (int tap = 0; tap < kernelSize; ++tap) {
             double left = kernelLeft - 0.5 + tap;
-
             List<Double[]> tapSamples = calcSamplesForRange(left, left + 1, samplesPerBin, sigma);
             double tapWeight = integrateSimphson(tapSamples);
             allSamples.add(tapWeight);
