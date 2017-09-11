@@ -5,13 +5,8 @@ import org.paim.commons.Image;
 /**
  * Class responsible for the erosion process
  */
-public class ErosionProcess extends PixelProcess<Image> {
+public class ErosionProcess extends SimpleConvolutionProcess {
 
-    /** The process kernel */
-    private final int[][] kernel;
-    /** The image result */
-    private final Image imageResult;
-    
     /**
      * Creates a new erosion process
      *
@@ -19,48 +14,19 @@ public class ErosionProcess extends PixelProcess<Image> {
      */
     public ErosionProcess(Image image) {
         super(image);
-        this.kernel = buildKernel();
-        this.imageResult = new Image(image);
-        setFinalizer(() -> {
-            setOutput(imageResult);
-        });
     }
 
     @Override
-    protected void process(int channel, int x, int y, int value) {
-        int less = Integer.MAX_VALUE;
-        for (int i = 0; i < kernel.length; i++) {
-            for (int j = 0; j < kernel.length; j++) {
-                if (kernel[i][j] == 0) {
-                    continue;
-                }
-                int result = value + kernel[i][j];
-                if (result < less) {
-                    less = result;
+    protected int computeCenter(int[][] neighbours) {
+        int largest = 0;
+        for (int x = 0; x < neighbours.length; x++) {
+            for (int y = 0; y < neighbours[x].length; y++) {
+                if (neighbours[x][y] > largest) {
+                    largest = neighbours[x][y];
                 }
             }
         }
-        if (less == 10) {
-            less = 0;
-        }
-        for (int i = 0; i < kernel.length; i++) {
-            for (int j = 0; j < kernel.length; j++) {
-                imageResult.set(channel, i, j, less);
-            }
-        }
-    }
-
-    /**
-     * Returns the erosion
-     *
-     * @return
-     */
-    private int[][] buildKernel() {
-        return new int[][]{
-            {0, 10, 0},
-            {10, 10, 10},
-            {0, 10, 0}
-        };
+        return largest;
     }
 
 }
