@@ -191,9 +191,6 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
         private int size;
         /** Perimeter */
         private int perimeter;
-        /** Cached bounds */
-        private Bounds bounds;
-
         /**
          * Creates a new extracted object
          * 
@@ -222,41 +219,6 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
          */
         public BinaryImage getMatrix() {
             return matrix;
-        }
-        
-        /**
-         * Returns the bounds of the object
-         * 
-         * @return Bounds
-         */
-        public Bounds getBounds() {
-            if (bounds == null) {
-                int x1 = Integer.MAX_VALUE;
-                int y1 = Integer.MAX_VALUE;
-                int x2 = 0;
-                int y2 = 0;
-                for (int x = 0; x < matrix.getWidth(); x++) {
-                    for (int y = 0; y < matrix.getHeight(); y++) {
-                        if (!matrix.get(x, y)) {
-                            continue;
-                        }
-                        if (x < x1) {
-                            x1 = x;
-                        }
-                        if (x > x2) {
-                            x2 = x;
-                        }
-                        if (y < y1) {
-                            y1 = y;
-                        }
-                        if (y > y2) {
-                            y2 = y;
-                        }
-                    }
-                }
-                this.bounds = new Bounds(x1, y1, x2 - x1, y2 - y1);
-            }
-            return bounds;
         }
 
         /**
