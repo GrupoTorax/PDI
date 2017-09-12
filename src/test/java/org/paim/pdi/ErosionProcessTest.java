@@ -17,9 +17,9 @@ public class ErosionProcessTest {
     public void testSingleChannelImage() {
         Image image = new Image(new int[][][] {
             {
-                {0, 30, 30, 30, 0},
-                {0, 30,  0, 30, 0},
-                {0, 30,  0, 30, 0},
+                {0,  0, 30, 30, 0},
+                {0,  0,  0, 30, 0},
+                {0,  0,  0, 30, 0},
                 {0,  0,  0,  0, 0},
             }
         }, new Range<>(0, 100));
@@ -28,10 +28,10 @@ public class ErosionProcessTest {
         Image output = process.getOutput();
         ImageAssert.assertImage(new Image(new int[][][] {
             {
-                {0, 0,  0, 30, 0},
-                {0, 0,  0, 30, 0},
-                {0, 0,  0, 30, 0},
-                {0, 0,  0,  0, 0},
+                {0,   0,  0,  0,  0},
+                {0,  30, 30, 30,  0},
+                {0,   0, 30, 30,  0},
+                {0,   0,  0,  0,  0},
             }
         }, new Range<>(0, 100)), output);
     }
