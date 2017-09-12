@@ -54,7 +54,7 @@ public class ZhangSuenProcess extends SkeletonProcess {
             firstStep = !firstStep;
             for (int x = 1; x < processImage.getWidth() - 1; x++) {
                 for (int y = 1; y < processImage.getHeight() - 1; y++) {
-                    if (processImage.get(0, x, y) == 255) {
+                    if (processImage.get(0, x, y) == image.getPixelValueRange().getHigher()) {
                         int[][] pixels = new int[3][3];
                         for (int x2 = 0; x2 < 3; x2++) {
                             for (int y2 = 0; y2 < 3; y2++) {
