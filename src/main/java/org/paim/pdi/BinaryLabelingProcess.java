@@ -299,8 +299,6 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
         public String toString() {
             return "ExtractedObject{" + "label=" + label + ", matrix=" + matrix + ", size=" + size + '}';
         }
-
-        
         
     }
 
