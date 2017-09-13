@@ -4,14 +4,14 @@ import org.paim.commons.Image;
 import org.paim.commons.ImageFactory;
 
 /**
- * Zhang Suen Process
+ *
  */
-public class ZhangSuenProcess extends SkeletonProcess {
+public class HoltProcess extends SkeletonProcess {
 
     private final Image resultImage;
     private Image processImage;
 
-    public ZhangSuenProcess(Image image) {
+    public HoltProcess(Image image) {
         super(image);
         this.resultImage = ImageFactory.buildEmptyImage(image);
         this.processImage = new Image(image);
@@ -19,32 +19,40 @@ public class ZhangSuenProcess extends SkeletonProcess {
             setOutput(resultImage);
         });
     }
-    
+
+    private boolean isHigher(int value) {
+        return value == image.getPixelValueRange().getHigher();
+
+    }
+
     /**
      * calculate the pixel value
-     * 
+     *
      * @param pixels
      * @param first
      * @return int
      */
     public int calc(int[][] pixels, boolean first) {
         int[] neighborhood = neighborhood(pixels);
-        if (isEdge(neighborhood)) {
-            if (first) {
-                if ((neighborhood[0] * neighborhood[2] * neighborhood[4] == 0) && 
-                        (neighborhood[2] * neighborhood[4] * neighborhood[6] == 0)) {
-                    return 0;
-                }
-            } else {
-                if ((neighborhood[6] * neighborhood[0] * neighborhood[2] == 0) && 
-                        (neighborhood[0] * neighborhood[6] * neighborhood[4] == 0)) {
-                    return 0;
-                }
+        if (!isEdge(neighborhood)) {
+            return pixels[1][1];
+        }
+        int n = pixels[1][0];
+        int l = pixels[2][1];
+        int s = pixels[1][2];
+        int o = pixels[0][1];
+        if (first) {
+            if (isHigher(l) && isHigher(s) && (isHigher(n) || isHigher(o))) {
+                return pixels[1][1];
+            }
+        } else {
+            if (isHigher(o) && isHigher(n) && (isHigher(s) || isHigher(l))) {
+                return pixels[1][1];
             }
         }
-        return pixels[1][1];
+        return 0;
     }
-    
+
     @Override
     protected void processImage() {
         boolean change = true;
