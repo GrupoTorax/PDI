@@ -12,6 +12,16 @@ public abstract class SkeletonProcess extends ImageProcess<Image> {
     }
 
     /**
+     * Returns true when the value is higher
+     *
+     * @param value
+     * @return
+     */
+    protected boolean isHigher(int value) {
+        return value == image.getPixelValueRange().getHigher();
+    }
+
+    /**
      * Returns neighborhood
      *
      * @param pixels
@@ -39,6 +49,16 @@ public abstract class SkeletonProcess extends ImageProcess<Image> {
         int np = neighborhood[0] + neighborhood[1] + neighborhood[2]
                 + neighborhood[3] + neighborhood[4] + neighborhood[5]
                 + neighborhood[6] + neighborhood[7];
+        return (np >= 2 && np <= 6) && isConnected(neighborhood);
+    }
+    
+    /**
+     * Returns true if the neighborhood is connected
+     * 
+     * @param neighborhood
+     * @return boolean
+     */
+    protected boolean isConnected(int[] neighborhood) {
         int sp = (neighborhood[0] < neighborhood[1] ? 1 : 0)
                 + (neighborhood[1] < neighborhood[2] ? 1 : 0)
                 + (neighborhood[2] < neighborhood[3] ? 1 : 0)
@@ -47,12 +67,12 @@ public abstract class SkeletonProcess extends ImageProcess<Image> {
                 + (neighborhood[5] < neighborhood[6] ? 1 : 0)
                 + (neighborhood[6] < neighborhood[7] ? 1 : 0)
                 + (neighborhood[7] < neighborhood[0] ? 1 : 0);
-        return (np >= 2 && np <= 6) && sp == 1;
+        return sp == 1;
     }
 
     /**
      * Returns the pixel matrix
-     * 
+     *
      * @param x
      * @param y
      * @param image

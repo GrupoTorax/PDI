@@ -4,14 +4,19 @@ import org.paim.commons.Image;
 import org.paim.commons.ImageFactory;
 
 /**
- * Holt process
+ * Stentiford Process
  */
-public class HoltProcess extends SkeletonProcess {
+public class StentifordProcess extends SkeletonProcess {
 
+    private final int STEP_1 = 1;
+    private final int STEP_2 = 2;
+    private final int STEP_3 = 3;
+    private final int STEP_4 = 4;
+    
     private final Image resultImage;
     private Image processImage;
 
-    public HoltProcess(Image image) {
+    public StentifordProcess(Image image) {
         super(image);
         this.resultImage = ImageFactory.buildEmptyImage(image);
         this.processImage = new Image(image);
@@ -19,29 +24,41 @@ public class HoltProcess extends SkeletonProcess {
             setOutput(resultImage);
         });
     }
-    
+
     /**
      * calculate the pixel value
      *
      * @param pixels
-     * @param first
+     * @param step
      * @return int
      */
-    public int calc(int[][] pixels, boolean first) {
+    public int calc(int[][] pixels, int step) {
         int[] neighborhood = neighborhood(pixels);
-        if (!isEdge(neighborhood)) {
+        if (!isConnected(neighborhood)) {
             return pixels[1][1];
         }
         int n = pixels[1][0];
         int l = pixels[2][1];
         int s = pixels[1][2];
         int o = pixels[0][1];
-        if (first) {
-            if (isHigher(l) && isHigher(s) && (isHigher(n) || isHigher(o))) {
+        int no = pixels[0][0];
+        if (step == STEP_1) {
+            if (!(!isHigher(n) && isHigher(s))) {
                 return pixels[1][1];
             }
-        } else {
-            if (isHigher(o) && isHigher(n) && (isHigher(s) || isHigher(l))) {
+        }
+        if (step == STEP_2) {
+            if (!(!isHigher(no) && isHigher(l))) {
+                return pixels[1][1];
+            }
+        }
+        if (step == STEP_3) {
+            if (!(!isHigher(s) & isHigher(n))) {
+                return pixels[1][1];
+            }
+        }
+        if (step == STEP_4) {
+            if (!(!isHigher(l) && isHigher(o))) {
                 return pixels[1][1];
             }
         }
@@ -51,15 +68,15 @@ public class HoltProcess extends SkeletonProcess {
     @Override
     protected void processImage() {
         boolean change = true;
-        boolean firstStep = false;
+        int step = 0;
         while (change) {
             change = false;
-            firstStep = !firstStep;
+            step++;
             for (int x = 1; x < processImage.getWidth() - 1; x++) {
                 for (int y = 1; y < processImage.getHeight() - 1; y++) {
                     if (processImage.get(0, x, y) == image.getPixelValueRange().getHigher()) {
                         int[][] pixels = pixels(x, y, processImage);
-                        int v = Math.max(Math.min(calc(pixels, firstStep), 255), 0);
+                        int v = Math.max(Math.min(calc(pixels, step), 255), 0);
                         if (v != processImage.get(0, x, y)) {
                             change = true;
                         }
@@ -68,7 +85,12 @@ public class HoltProcess extends SkeletonProcess {
                 }
             }
             processImage = new Image(resultImage);
+            // The final step
+            if (step == STEP_4) {
+                step = 0;
+            }
         }
     }
 
 }
+
