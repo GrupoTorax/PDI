@@ -25,11 +25,5 @@ public class SobelProcess extends XYConvolutionProcess {
     public double[][] getYMask() {
         return new double[][] {{1, 2, 1}, {0, 0, 0}, {-1, -2, -1}};
     }
-
-    @Override
-    protected int computePixel(int channel, int x, int y) {
-        int newValue = super.computePixel(channel, x, y);
-        return newValue * 256 / 1024;
-    }
     
 }

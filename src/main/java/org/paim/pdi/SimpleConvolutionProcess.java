@@ -33,7 +33,6 @@ public abstract class SimpleConvolutionProcess extends ImageProcess<Image> {
                     for (int lx = 0; lx < 3; lx++) {
                         for (int ly = 0; ly < 3; ly++) {
                             neighbours[lx][ly] = image.get(channel, x + lx - 1, y + ly - 1);
-
                         }
                     }
                     int newValue = computeCenter(neighbours);

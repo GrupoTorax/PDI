@@ -5,7 +5,7 @@ import org.paim.commons.Image;
 /**
  * Blur using the average of the values
  */
-public class AverageBlurProcess  extends SimpleConvolutionProcess {
+public class AverageBlurProcess extends SimpleConvolutionProcess {
 
     /**
      * Creates a new Blur using the average of the values process

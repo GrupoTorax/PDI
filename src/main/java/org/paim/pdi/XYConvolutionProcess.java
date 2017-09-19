@@ -65,17 +65,18 @@ public abstract class XYConvolutionProcess extends ImageProcess<Image> {
      * @return int
      */
     protected int computePixel(int channel, int x, int y) {
-        double gradienteX = 0.0d;
-        double gradienteY = 0.0d;
+        double gradientX = 0.0d;
+        double gradientY = 0.0d;
         for (int lx = 0; lx < 3; lx++) {
             for (int ly = 0; ly < 3; ly++) {
-                int valor = image.get(channel, x + lx - 1, y + ly - 1);
-                gradienteX += valor * xMask[lx][ly];
-                gradienteY += valor * yMask[lx][ly];
-
+                int value = image.get(channel, x + lx - 1, y + ly - 1);
+                gradientX += value * xMask[lx][ly];
+                gradientY += value * yMask[lx][ly];
             }
         }
-        return (int) Math.sqrt(Math.pow(gradienteX, 2) + Math.pow(gradienteY, 2));
+        gradientX /= 9;
+        gradientY /= 9;
+        return (int) Math.sqrt(Math.pow(gradientX, 2) + Math.pow(gradientY, 2));
     }
 
 }

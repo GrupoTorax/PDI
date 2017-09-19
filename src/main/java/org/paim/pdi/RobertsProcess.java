@@ -26,6 +26,4 @@ public class RobertsProcess extends XYConvolutionProcess {
         return new double[][]{{0, 0, 0}, {0, 0, -1}, {0, 1, 0}};
     }
     
-
-    
 }

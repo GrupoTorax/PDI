@@ -67,7 +67,7 @@ public class KirshProcess extends CardinalConvolutionProcess {
     @Override
     protected int computePixel(int channel, int x, int y) {
         int newValue = super.computePixel(channel, x, y);
-        return newValue * 256 / 3825;
+        return newValue * 256 / 3840;
     }
 
 }
