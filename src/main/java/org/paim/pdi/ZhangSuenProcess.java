@@ -8,7 +8,9 @@ import org.paim.commons.ImageFactory;
  */
 public class ZhangSuenProcess extends SkeletonProcess {
 
+    /** The result imagen */
     private final Image resultImage;
+    /** The imagen in process */
     private Image processImage;
 
     public ZhangSuenProcess(Image image) {

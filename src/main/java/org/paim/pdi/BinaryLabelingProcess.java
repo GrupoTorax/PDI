@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.paim.commons.BinaryImage;
 import org.paim.commons.BinaryLabeling;
-import org.paim.commons.Bounds;
 import org.paim.commons.Image;
 import org.paim.commons.ImageFactory;
 
