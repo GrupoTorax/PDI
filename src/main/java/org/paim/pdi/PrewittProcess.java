@@ -23,12 +23,12 @@ public class PrewittProcess extends XYConvolutionProcess {
 
     @Override
     public double[][] getXMask() {
-        return new double[][]{{1, 1, 1}, {0, 0, 0}, {-1, -1, -1}};
+        return new double[][]{{1, 0, -1}, {1, 0, -1}, {1, 0, -1}};
     }
 
     @Override
     public double[][] getYMask() {
-        return new double[][]{{1, 0, -1}, {1, 0, -1}, {1, 0, -1}};
+        return new double[][]{{1, 1, 1}, {0, 0, 0}, {-1, -1, -1}};
     }
-    
+
 }

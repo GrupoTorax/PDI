@@ -74,9 +74,11 @@ public abstract class XYConvolutionProcess extends ImageProcess<Image> {
                 gradientY += value * yMask[lx][ly];
             }
         }
-        gradientX /= 9;
-        gradientY /= 9;
-        return (int) Math.sqrt(Math.pow(gradientX, 2) + Math.pow(gradientY, 2));
+        int value =  (int) Math.sqrt(Math.pow(gradientX, 2) + Math.pow(gradientY, 2));
+        if (value > image.getPixelValueRange().getHigher()) {
+            return image.getPixelValueRange().getHigher();
+        }
+        return value;
     }
 
 }

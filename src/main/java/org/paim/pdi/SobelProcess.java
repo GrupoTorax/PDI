@@ -3,12 +3,12 @@ package org.paim.pdi;
 import org.paim.commons.Image;
 
 /**
- * Roberts process for edge detection
+ * Sobel process for edge detection
  */
 public class SobelProcess extends XYConvolutionProcess {
 
     /**
-     * Creates a new Roberts process
+     * Creates a new Sobel process
      *
      * @param image
      */
