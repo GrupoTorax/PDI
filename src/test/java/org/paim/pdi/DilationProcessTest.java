@@ -28,10 +28,10 @@ public class DilationProcessTest {
         Image output = process.getOutput();
         ImageAssert.assertImage(new Image(new int[][][] {
             {
-                {0, 0, 0, 0, 0},
                 {0, 0, 30, 0, 0},
-                {0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0},
+                {0, 0, 30, 0, 0},
+                {0, 0,  0, 0, 0},
+                {0, 0,  0, 0, 0},
             }
         }, new Range<>(0, 100)), output);
     }
