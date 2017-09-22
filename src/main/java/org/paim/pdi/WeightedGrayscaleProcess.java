@@ -6,7 +6,7 @@ import org.paim.commons.ImageFactory;
 /**
  * Process for converting a image to gray scale using the simple average
  */
-public class WeightedGrayscaleProcess extends PixelProcess<Image> {
+public class WeightedGrayscaleProcess extends ImageProcess<Image> {
 
     /** Gray scale image */
     private final Image grayImage;
@@ -32,10 +32,10 @@ public class WeightedGrayscaleProcess extends PixelProcess<Image> {
             resultImage = ImageFactory.buildEmptyImage();
         } else {
             resultImage = ImageFactory.
-                buildEmptyImage(Image.CHANNELS_GRAYSCALE,
-                        image.getWidth(),
-                        image.getHeight(),
-                        image.getPixelValueRange());
+                    buildEmptyImage(Image.CHANNELS_GRAYSCALE,
+                            image.getWidth(),
+                            image.getHeight(),
+                            image.getPixelValueRange());
         }
         this.grayImage = resultImage;
         this.redWeight = redWeight;
@@ -47,19 +47,19 @@ public class WeightedGrayscaleProcess extends PixelProcess<Image> {
     }
 
     @Override
-    protected void process(int channel, int x, int y, int value) {
-        int grayValue = grayImage.get(Image.CHANNEL_GRAY, x, y);
-        if (channel == Image.CHANNEL_RED) {
-            value = (int) (value * redWeight);
+    public void processImage() {
+        for (int x = 0; x < image.getWidth(); x++) {
+            for (int y = 0; y < image.getHeight(); y++) {
+                if (image.isRGB()) {
+                    int color = (int) (image.get(Image.CHANNEL_RED, x, y) * redWeight + 
+                            image.get(Image.CHANNEL_GREEN, x, y) * greenWeight + 
+                            image.get(Image.CHANNEL_BLUE, x, y) * blueWeight + 0.5);
+                    grayImage.set(Image.CHANNEL_GRAY, x, y, color);
+                } else {
+                    grayImage.set(Image.CHANNEL_GRAY, x, y, image.get(Image.CHANNEL_GRAY, x, y));
+                }
+            }
         }
-        if (channel == Image.CHANNEL_GREEN) {
-            value = (int) (value * greenWeight);
-        }
-        if (channel == Image.CHANNEL_BLUE) {
-            value = (int) (value * blueWeight);
-        }
-        grayImage.set(Image.CHANNEL_GRAY, x, y, grayValue + (value / 3));
     }
 
-    
 }
