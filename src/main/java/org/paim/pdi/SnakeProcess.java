@@ -8,7 +8,6 @@ import org.paim.commons.ImageFactory;
  * The snake process
  */
 public class SnakeProcess extends ImageProcess<BinaryImage>  {
-
     
     private final BinaryImage binaryImage;
     private final int steps;
@@ -30,17 +29,19 @@ public class SnakeProcess extends ImageProcess<BinaryImage>  {
 
     @Override
     protected void processImage() {
-        
         for (int i = 0; i < steps; i++) {
             if (!step()) {
                 break;
             }
         }
-        
+        for (int x = 100; x < 200; x++) {
+            for (int y = 100; y < 200; y++) {
+                binaryImage.set(x, y, true);
+            }
+        }
     }
 
     private boolean step() {
-        
         return false;
     }
     
