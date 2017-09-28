@@ -76,7 +76,7 @@ public class StentifordProcess extends SkeletonProcess {
                 for (int y = 1; y < processImage.getHeight() - 1; y++) {
                     if (processImage.get(0, x, y) == image.getPixelValueRange().getHigher()) {
                         int[][] pixels = pixels(x, y, processImage);
-                        int v = Math.max(Math.min(calc(pixels, step), 255), 0);
+                        int v = Math.max(Math.min(calc(pixels, step), image.getPixelValueRange().getHigher()), 0);
                         if (v != processImage.get(0, x, y)) {
                             change = true;
                         }

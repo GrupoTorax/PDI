@@ -28,14 +28,14 @@ public abstract class SkeletonProcess extends ImageProcess<Image> {
      * @return int[]
      */
     protected int[] neighborhood(int[][] pixels) {
-        int p2 = pixels[1][0] / 255;
-        int p3 = pixels[2][0] / 255;
-        int p4 = pixels[2][1] / 255;
-        int p5 = pixels[2][2] / 255;
-        int p6 = pixels[1][2] / 255;
-        int p7 = pixels[0][2] / 255;
-        int p8 = pixels[0][1] / 255;
-        int p9 = pixels[0][0] / 255;
+        int p2 = pixels[1][0] / image.getPixelValueRange().getHigher();
+        int p3 = pixels[2][0] / image.getPixelValueRange().getHigher();
+        int p4 = pixels[2][1] / image.getPixelValueRange().getHigher();
+        int p5 = pixels[2][2] / image.getPixelValueRange().getHigher();
+        int p6 = pixels[1][2] / image.getPixelValueRange().getHigher();
+        int p7 = pixels[0][2] / image.getPixelValueRange().getHigher();
+        int p8 = pixels[0][1] / image.getPixelValueRange().getHigher();
+        int p9 = pixels[0][0] / image.getPixelValueRange().getHigher();
         return new int[]{p2, p3, p4, p5, p6, p7, p8, p9};
     }
 
