@@ -40,7 +40,7 @@ public class TransformProcess extends PixelProcess<Image> {
         newY += halfY;
         // Pixel position is right
         if (newX < image.getWidth() && newY < image.getHeight() && newX >= 0 && newY >= 0) {
-            img.set(channel, newX, newY, value);
+            img.set(channel, x, y, image.get(channel, newX, newY));
         }
     }
 
