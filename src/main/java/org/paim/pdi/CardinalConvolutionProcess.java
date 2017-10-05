@@ -28,11 +28,11 @@ public abstract class CardinalConvolutionProcess extends ImageProcess<Image> {
 
     /**
      * Returns the masks
-     * 
+     *
      * @return double[][][]
      */
     protected abstract double[][][] getMasks();
-    
+
     @Override
     protected void processImage() {
         masks = getMasks();

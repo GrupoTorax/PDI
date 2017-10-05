@@ -1,6 +1,5 @@
 package org.paim.pdi;
 
-import static java.lang.Integer.sum;
 import java.util.HashMap;
 import java.util.Map;
 import org.paim.commons.Image;
