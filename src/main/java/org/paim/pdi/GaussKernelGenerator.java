@@ -10,11 +10,11 @@ public class GaussKernelGenerator {
 
     /** Default sample count */
     public static final int DEFAULT_SAMPLE_COUNT = 100;
-    
+
     /**
-     * Builds a Gauss kernel with the number of samples being 
+     * Builds a Gauss kernel with the number of samples being
      * {@link DEFAULT_SAMPLE_COUNT}
-     * 
+     *
      * @param sigma
      * @param kernelSize
      * @return double[]
@@ -24,8 +24,32 @@ public class GaussKernelGenerator {
     }
 
     /**
+     * Builds a Gauss kernel with the number of samples being
+     * {@link DEFAULT_SAMPLE_COUNT}
+     *
+     * @param sigma
+     * @param kernelSize
+     * @return double[]
+     */
+    public static double[][] buildKernel2D(double sigma, int kernelSize) {
+        double[] temp = buildKernel(sigma, kernelSize, DEFAULT_SAMPLE_COUNT);
+        double[][] kernel = new double[kernelSize][kernelSize];
+        int x = 0;
+        int y = 0;
+        for (int i = 0; i < kernelSize; i++) {
+            for (int j = 0; j < kernelSize; j++) {
+                kernel[x][y] = temp[i] * temp[j];
+                y++;
+            }
+            y = 0;
+            x++;
+        }
+        return kernel;
+    }
+
+    /**
      * Builds a Gauss kernel
-     * 
+     *
      * @param sigma
      * @param kernelSize
      * @param sampleCount

@@ -14,11 +14,11 @@ public class MarrHildrethProcess extends SimpleKernelConvolution {
     /**
      * Returns the kernel
      *
-     * @return int[][]
+     * @return {@code double[][]}
      */
     @Override
-    protected int[][] getKernel() {
-        return new int[][]{
+    protected double[][] getKernel() {
+        return new double[][]{
             {0, 0, -1, 0, 0},
             {0, -1, -2, -1, 0},
             {-1, -2, 16, -2, -1},
