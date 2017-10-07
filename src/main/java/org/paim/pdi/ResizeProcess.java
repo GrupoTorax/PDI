@@ -15,8 +15,8 @@ public class ResizeProcess extends TransformProcess {
      */
     public ResizeProcess(Image image, double size) {
         super(image, new double[][]{
-            {size, 0, 0},
-            {0, size, 0},
+            {1 / size, 0, 0},
+            {0, 1 / size, 0},
             {0, 0, 1}
         });
     }
