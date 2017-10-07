@@ -18,12 +18,12 @@ public class RobertsProcess extends XYConvolutionProcess {
 
     @Override
     public double[][] getXMask() {
-        return new double[][]{{0, 0, 0}, {0, -1, 0}, {0, 0, 1}};
+        return new double[][]{{0, -1, 0}, {1, 0, 0}, {0, 0, 0}};
     }
 
     @Override
     public double[][] getYMask() {
-        return new double[][]{{0, 0, 0}, {0, 0, -1}, {0, 1, 0}};
+        return new double[][]{{-1, 0, 0}, {0, 1, 0}, {0, 0, 0}};
     }
     
 }

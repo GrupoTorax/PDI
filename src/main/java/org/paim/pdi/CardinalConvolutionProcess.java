@@ -33,6 +33,15 @@ public abstract class CardinalConvolutionProcess extends ImageProcess<Image> {
      */
     protected abstract double[][][] getMasks();
 
+    /**
+     * Returns the masks weights
+     *
+     * @return double[]
+     */
+    protected double[] getMaskWeights() {
+        return new double[] {1, 1, 1, 1, 1, 1, 1, 1};
+    }
+
     @Override
     protected void processImage() {
         masks = getMasks();
@@ -40,6 +49,7 @@ public abstract class CardinalConvolutionProcess extends ImageProcess<Image> {
             for (int x = 1; x < image.getWidth() - 1; x++) {
                 for (int y = 1; y < image.getHeight() - 1; y++) {
                     int newValue = computePixel(channel, x, y);
+                    newValue = outputImage.getPixelValueRange().limit(newValue);
                     outputImage.set(channel, x, y, newValue);
                 }
             }
@@ -64,11 +74,12 @@ public abstract class CardinalConvolutionProcess extends ImageProcess<Image> {
                 }
             }
         }
-        double gradiente = 0;
+        double[] weights = getMaskWeights();
+        double gradient = 0;
         for (int i = 0; i < gradients.length; i++) {
-            gradiente = Math.max(gradients[i], gradiente);
+            gradient = Math.max(gradients[i] * weights[i], gradient);
         }
-        return (int) gradiente;
+        return (int) gradient;
     }
 
 }
