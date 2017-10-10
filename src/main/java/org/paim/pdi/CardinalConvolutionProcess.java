@@ -8,10 +8,10 @@ import org.paim.commons.ImageFactory;
  */
 public abstract class CardinalConvolutionProcess extends ImageProcess<Image> {
 
-    /** Gray scale image */
-    private final Image outputImage;
     /** Masks */
     private double[][][] masks;
+    /** Gray scale image */
+    protected final Image outputImage;
 
     /**
      * Creates a new Roberts process
@@ -74,6 +74,16 @@ public abstract class CardinalConvolutionProcess extends ImageProcess<Image> {
                 }
             }
         }
+        return processGradients(gradients);
+    }
+    
+    /**
+     * Process the gradients
+     * 
+     * @param gradients
+     * @return int
+     */
+    protected int processGradients(double[] gradients) {
         double[] weights = getMaskWeights();
         double gradient = 0;
         for (int i = 0; i < gradients.length; i++) {

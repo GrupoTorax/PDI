@@ -42,7 +42,8 @@ public class ContrastProcess extends PixelProcess<Image> {
     @Override
     protected void process(int channel, int x, int y, int value) {
         Range<Integer> range = outputImage.getPixelValueRange();
-        outputImage.set(channel, x, y, range.limit((int) (value * contrast)));
+        value = (int) (((value - range.getLength() / 2) * contrast) + range.getLength() / 2);
+        outputImage.set(channel, x, y, range.limit(value));
     }
 
 }
