@@ -27,7 +27,7 @@ public class GaussianBlurProcess extends SimpleKernelConvolution {
 
     @Override
     protected double[][] getKernel() {
-        return GaussKernelGenerator.buildKernel2D(sigma, maskSize);
+        return GaussKernelGenerator.buildSimpleKernel2D(sigma, maskSize);
     }
-
+ 
 }
