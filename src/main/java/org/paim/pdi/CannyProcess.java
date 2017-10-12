@@ -23,7 +23,11 @@ public class CannyProcess extends ImageProcess<Image> {
      */
     public CannyProcess(Image image) {
         super(image);
-        this.ret = ImageFactory.buildEmptyImage(image);
+        this.ret = ImageFactory.buildEmptyImage(1,
+                image.getWidth(), 
+                image.getHeight(), 
+                image.getPixelValueRange()
+        );
         setFinalizer(() -> {
             setOutput(ret);
         });
@@ -40,7 +44,7 @@ public class CannyProcess extends ImageProcess<Image> {
         // 3º Suppress non maximums
         nonMaximus(gradientProcess);
         // STEP 4 - Hysteresis Threshold
-        HysteresisThresholdProcess hysteresisThresholdProcess = new HysteresisThresholdProcess(ret, 20, 100);
+        HysteresisThresholdProcess hysteresisThresholdProcess = new HysteresisThresholdProcess(ret, 25, 255);
         hysteresisThresholdProcess.process();
         ret = hysteresisThresholdProcess.getOutput();
     }
@@ -60,28 +64,28 @@ public class CannyProcess extends ImageProcess<Image> {
             for (int y = 1; y < ret.getHeight() - 1; y++) {
                 switch (orients.get(p)) {
                     case ANGLE_0:
-                        leftPixel = gradients[y - 1][x];
-                        rightPixel = gradients[y + 1][x];
+                        leftPixel = gradients[x][y - 1];
+                        rightPixel = gradients[x][y + 1];
                         break;
                     case ANGLE_45:
-                        leftPixel = gradients[y - 1][x + 1];
-                        rightPixel = gradients[y + 1][x - 1];
+                        leftPixel = gradients[x + 1][y - 1];
+                        rightPixel = gradients[x - 1][y + 1];
                         break;
                     case ANGLE_90:
-                        leftPixel = gradients[y][x + 1];
-                        rightPixel = gradients[y][x - 1];
+                        leftPixel = gradients[x + 1][y];
+                        rightPixel = gradients[x - 1][y];
                         break;
                     case ANGLE_135:
-                        leftPixel = gradients[y + 1][x + 1];
-                        rightPixel = gradients[y - 1][x - 1];
+                        leftPixel = gradients[x + 1][y + 1];
+                        rightPixel = gradients[x - 1][y - 1];
                         break;
 
                 }
                 // compare current pixels value with adjacent pixels
-                if ((gradients[y][x] < leftPixel) || (gradients[y][x] < rightPixel)) {
+                if ((gradients[x][y] < leftPixel) || (gradients[x][y] < rightPixel)) {
                     ret.set(0, x, y, 0);
                 } else {
-                    ret.set(0, x, y, (int) (gradients[y][x] / gradientProcess.getMaxGradient() * 255));
+                    ret.set(0, x, y, (int) ((double) gradients[x][y] / gradientProcess.getMaxGradient() * 255));
                 }
                 p++;
             }

@@ -6,21 +6,23 @@ import org.paim.commons.Image;
  * Hysteresis Threshold
  */
 public class HysteresisThresholdProcess extends SimpleConvolutionProcess {
-    
-    /** Low Threshold*/
-    private int lowThreshold;
-    /** High Threshold */ 
-    private int highThreshold;
+
+    /** Low Threshold */
+    private final int lowThreshold;
+    /** High Threshold */
+    private final int highThreshold;
 
     /**
      * Creates a new Hysteresis Threshold Process
-     * 
+     *
      * @param image
      * @param lowThreshold
-     * @param highThreshold 
+     * @param highThreshold
      */
     public HysteresisThresholdProcess(Image image, int lowThreshold, int highThreshold) {
         super(image);
+        this.lowThreshold = lowThreshold;
+        this.highThreshold = highThreshold;
     }
 
     @Override
@@ -37,9 +39,9 @@ public class HysteresisThresholdProcess extends SimpleConvolutionProcess {
                 && (neighbours[2][0] < highThreshold)
                 && (neighbours[2][1] < highThreshold)
                 && (neighbours[2][2] < highThreshold)) {
-            return 0;
+            return neighbours[1][1];
         }
-        return neighbours[1][1];
+        return 0;
     }
 
 }
