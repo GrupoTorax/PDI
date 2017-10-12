@@ -84,46 +84,13 @@ public class SnakeProcess extends ImageProcess<BinaryImage> {
     private void buildGradient() {
         int width = image.getWidth();
         int height = image.getHeight();
-        int[][] clum = new int[width][height];
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                if (image.getPixelValueRange().isBinary()) {
-                    clum[x][y] = image.get(Image.CHANNEL_GRAY, x, y) == 1 ? 255 : 0;
-                } else {
-                    if (image.isGrayScale()) {
-                        clum[x][y] = image.get(Image.CHANNEL_GRAY, x, y);
-                    } else {
-                        int r = image.get(Image.CHANNEL_RED, x, y);
-                        int g = image.get(Image.CHANNEL_GREEN, x, y);
-                        int b = image.get(Image.CHANNEL_BLUE, x, y);
-                        clum[x][y] = ((int) (0.299D * r + 0.587D * g + 0.114D * b));
-                    }
-                }
-            }
-        }
-        gradient = new int[image.getWidth()][image.getHeight()];
-        int maxgradient = 0;
-        for (int y = 0; y < height - 2; y++) {
-            for (int x = 0; x < width - 2; x++) {
-                int p00 = clum[(x + 0)][(y + 0)];
-                int p10 = clum[(x + 1)][(y + 0)];
-                int p20 = clum[(x + 2)][(y + 0)];
-                int p01 = clum[(x + 0)][(y + 1)];
-                int p21 = clum[(x + 2)][(y + 1)];
-                int p02 = clum[(x + 0)][(y + 2)];
-                int p12 = clum[(x + 1)][(y + 2)];
-                int p22 = clum[(x + 2)][(y + 2)];
-                int sx = p20 + 2 * p21 + p22 - (p00 + 2 * p01 + p02);
-                int sy = p02 + 2 * p12 + p22 - (p00 + 2 * p10 + p10);
-                int snorm = (int) Math.sqrt(sx * sx + sy * sy);
-                gradient[(x + 1)][(y + 1)] = snorm;
-                maxgradient = Math.max(maxgradient, snorm);
-            }
-        }
+        GradientProcess gradientProcess = new GradientProcess(image);
+        gradientProcess.process();
+        gradient = gradientProcess.getOutput().getData()[0];
         boolean[][] binarygradient = new boolean[width][height];
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                if (gradient[x][y] > THRESHOLD * maxgradient / 100) {
+                if (gradient[x][y] > THRESHOLD * gradientProcess.getMaxGradient() / 100) {
                     binarygradient[x][y] = true;
                 } else {
                     gradient[x][y] = 0;
