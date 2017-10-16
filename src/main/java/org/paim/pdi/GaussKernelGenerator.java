@@ -46,6 +46,36 @@ public class GaussKernelGenerator {
         }
         return kernel;
     }
+    
+    /**
+     * Builds a Gauss kernel with the number of samples being
+     * 
+     * @param sigma
+     * @param size
+     * @return {@code double[][]}
+     */
+    public static double[][] buildSimpleKernel2D(double sigma, int size) {
+        int r = size / 2;
+        double[][] kernel = new double[size][size];
+        // compute kernel
+        double sum = 0;
+        for (int y = -r, i = 0; i < size; y++, i++) {
+            for (int x = -r, j = 0; j < size; x++, j++) {
+                kernel[i][j] = function2D(x, y, sigma);
+                sum += kernel[i][j];
+            }
+        }
+        for (int i = 0; i < kernel.length; i++) {
+            for (int j = 0; j < kernel[0].length; j++) {
+                kernel[i][j] /= sum;
+            }
+        }
+        return kernel;
+    }
+    
+    public static double function2D(double x, double y, double sigma) {
+        return Math.exp(-(x * x + y * y) / (2 * sigma * sigma));
+    }
 
     /**
      * Builds a Gauss kernel

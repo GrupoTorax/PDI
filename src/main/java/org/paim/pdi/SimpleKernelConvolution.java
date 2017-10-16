@@ -54,7 +54,7 @@ public abstract class SimpleKernelConvolution extends ImageProcess<Image> {
         if (valueKernel > 0) {
             sumValue /= valueKernel;
         }
-        int value = image.getPixelValueRange().limit((int) sumValue);
+        int value = image.getPixelValueRange().limit((int) Math.round(sumValue));
         outputImage.set(channel, x, y, value);
     }
 

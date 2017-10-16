@@ -23,9 +23,9 @@ public class GaussianBlurProcessTest {
         blur.process();
         Image expected = new Image(new int[][][] {
             {
-                {10, 23, 10},
-                {23, 54, 23},
-                {10, 23, 10}
+                {25, 29, 25},
+                {29, 35, 29},
+                {25, 29, 25}
             }
         }, new Range<>(0, 100));
         ImageAssert.assertImage(expected, blur.getOutput());
