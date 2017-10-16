@@ -129,7 +129,6 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
                     map.put(label, object);
                 }
                 object.size++;
-                object.matrix.set(x, y, true);
             }
         }
         return new ObjectList(map.values());
@@ -197,7 +196,7 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
          */
         public ExtractedObject(int label) {
             this.label = label;
-            this.matrix = new BinaryImage(ImageFactory.buildBinaryImage(out.getWidth(), out.getHeight()));
+            this.matrix = new BinaryImage(out, label);
             this.size = 0;
             this.perimeter = -1;
         }
