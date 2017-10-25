@@ -24,7 +24,11 @@ public class GradientProcess extends ImageProcess<Image> {
      */
     public GradientProcess(Image image) {
         super(image);
-        this.gradient = ImageFactory.buildEmptyImage(image);
+        this.gradient = ImageFactory.buildEmptyImage(
+                Image.CHANNELS_GRAYSCALE, 
+                image.getWidth(), 
+                image.getHeight(), image.getPixelValueRange()
+        );
         this.orientation = new ArrayList<>();
         setFinalizer(() -> {
             setOutput(gradient);
@@ -65,7 +69,7 @@ public class GradientProcess extends ImageProcess<Image> {
                 int sx = p20 + 2 * p21 + p22 - (p00 + 2 * p01 + p02);
                 int sy = p02 + 2 * p12 + p22 - (p00 + 2 * p10 + p10);
                 int snorm = (int) Math.sqrt(sx * sx + sy * sy);
-                gradient.set(0, (x + 1), (y + 1), snorm);
+                gradient.set(0, (x + 1), (y + 1), gradient.getPixelValueRange().limit(snorm));
                 maxgradient = Math.max(maxgradient, snorm);
                 GradientOrientation gorientation = GradientOrientation.ANGLE_0;
                 if (sx > 0) {
