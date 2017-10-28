@@ -42,13 +42,25 @@ public abstract class SimpleKernelConvolution extends ImageProcess<Image> {
     protected void processKernel(double[][] kernel, int channel, int x, int y) {
         double sumValue = 0;
         double valueKernel = 0;
-        int center = kernel.length - 2;
-        for (int i = 0; i < kernel.length; i++) {
-            for (int j = 0; j < kernel.length; j++) {
-                int xPos = image.limitX(x + (i - center));
-                int yPos = image.limitY(y + (j - center));
-                sumValue += image.get(channel, xPos, yPos) * kernel[i][j];
-                valueKernel += kernel[i][j];
+        int ksize = kernel.length;
+        int center = ksize - 2;
+        if (x > center && x < image.getHeight() - center && y > center && y < image.getHeight() - center) {
+            for (int i = 0; i < ksize; i++) {
+                for (int j = 0; j < ksize; j++) {
+                    int xPos = x + (i - center);
+                    int yPos = y + (j - center);
+                    sumValue += image.get(channel, xPos, yPos) * kernel[i][j];
+                    valueKernel += kernel[i][j];
+                }
+            }
+        } else {
+            for (int i = 0; i < ksize; i++) {
+                for (int j = 0; j < ksize; j++) {
+                    int xPos = image.limitX(x + (i - center));
+                    int yPos = image.limitY(y + (j - center));
+                    sumValue += image.get(channel, xPos, yPos) * kernel[i][j];
+                    valueKernel += kernel[i][j];
+                }
             }
         }
         if (valueKernel > 0) {
