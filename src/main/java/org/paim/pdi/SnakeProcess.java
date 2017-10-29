@@ -18,10 +18,10 @@ public class SnakeProcess extends ImageProcess<BinaryImage> {
 
     private final BinaryImage binaryImage;
     private final int steps;
-    private final int alpha;
-    private final int beta;
-    private final int gamma;
-    private final int delta;
+    private final double alpha;
+    private final double beta;
+    private final double gamma;
+    private final double delta;
     private final double[][] energyUniformity = new double[3][3];
     private final double[][] energyCurvature = new double[3][3];
     private final double[][] energyFlow = new double[3][3];
@@ -29,7 +29,7 @@ public class SnakeProcess extends ImageProcess<BinaryImage> {
     private int[][] gradient;
     private int[][] flow;
 
-    public SnakeProcess(Image image, int steps, int alpha, int beta, int gamma) {
+    public SnakeProcess(Image image, int steps, double alpha, double beta, double gamma) {
         super(image);
         this.steps = steps;
         this.alpha = alpha;
@@ -135,7 +135,7 @@ public class SnakeProcess extends ImageProcess<BinaryImage> {
      * @return {@code List<Point>}
      */
     private List<Point> step(List<Point> points, int[][] gradient, int[][] flow) {
-        List newPoints = new ArrayList(points.size());
+        List newPoints = new ArrayList();
         boolean changed = false;
         double snakelength = this.getsnakelength(points);
         for (int i = 0; i < points.size(); i++) {
@@ -400,7 +400,7 @@ public class SnakeProcess extends ImageProcess<BinaryImage> {
             }
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
-                    output[x][y] /= 0;
+                    output[x][y] /= 5;
                 }
             }
             return output;

@@ -23,7 +23,7 @@ public class Snake {
 
     public static void main(String[] args) throws IOException {
 
-        Image image = ImageFactory.buildRGBImage(ImageIO.read(new File("/home/jonatabecker/Desktop/snake2.png")));
+        Image image = ImageFactory.buildRGBImage(ImageIO.read(new File("/home/jonatabecker/Desktop/binary.jpg")));
         SnakeProcess process = new SnakeProcess(image, 1000, 1, 1, 1);
         process.process();
 
