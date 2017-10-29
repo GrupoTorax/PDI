@@ -15,6 +15,8 @@ public class SnakeProcess extends ImageProcess<BinaryImage> {
 
     private final int MAXLEN = 16;
     private final int THRESHOLD = 25;
+    private final int AUTOADAPT_MINLEN = 8;
+    private final int AUTOADAPT_MAXLEN = 16;
 
     private final BinaryImage binaryImage;
     private final int steps;
@@ -51,6 +53,8 @@ public class SnakeProcess extends ImageProcess<BinaryImage> {
             if (newPoints == null) {
                 break;
             }
+            removeOverlappingPoints(newPoints, AUTOADAPT_MINLEN);
+            addMissingPoints(newPoints, AUTOADAPT_MAXLEN);
             points = newPoints;
         }
         buildBinaryImage(points);
@@ -58,8 +62,8 @@ public class SnakeProcess extends ImageProcess<BinaryImage> {
 
     /**
      * Creates a binary imagen from a list of points
-     * 
-     * @param points 
+     *
+     * @param points
      */
     private void buildBinaryImage(List<Point> points) {
         int[] xPoints = points.stream().map((it) -> {
@@ -77,7 +81,7 @@ public class SnakeProcess extends ImageProcess<BinaryImage> {
             }
         }
     }
-    
+
     /**
      * Builds de gradient/flow matrix
      */
@@ -105,10 +109,10 @@ public class SnakeProcess extends ImageProcess<BinaryImage> {
             }
         }
     }
-    
+
     /**
-     * Builds the snake initial points 
-     * 
+     * Builds the snake initial points
+     *
      * @return {@code List<Point>}
      */
     private List<Point> buildInitialPoints() {
@@ -128,7 +132,7 @@ public class SnakeProcess extends ImageProcess<BinaryImage> {
 
     /**
      * Execute a point search, if the snake don't change, the method returns null
-     * 
+     *
      * @param points
      * @param gradient
      * @param flow
@@ -196,8 +200,8 @@ public class SnakeProcess extends ImageProcess<BinaryImage> {
 
     /**
      * Normalize the points
-     * 
-     * @param array3x3 
+     *
+     * @param array3x3
      */
     private void normalize(double[][] array3x3) {
         double sum = 0.0;
@@ -218,7 +222,7 @@ public class SnakeProcess extends ImageProcess<BinaryImage> {
 
     /**
      * Returns the snake length
-     * 
+     *
      * @param snake
      * @return double
      */
@@ -236,7 +240,7 @@ public class SnakeProcess extends ImageProcess<BinaryImage> {
 
     /**
      * Calculate the distance between two points
-     * 
+     *
      * @param a
      * @param b
      * @return double
@@ -247,10 +251,10 @@ public class SnakeProcess extends ImageProcess<BinaryImage> {
         double un = ux * ux + uy * uy;
         return Math.sqrt(un);
     }
-    
+
     /**
      * Calculate the Uniformity force
-     * 
+     *
      * @param prev
      * @param p
      * @param snakeLength
@@ -266,7 +270,7 @@ public class SnakeProcess extends ImageProcess<BinaryImage> {
 
     /**
      * Calculate the Curvature force
-     * 
+     *
      * @param prev
      * @param p
      * @param next
@@ -289,7 +293,7 @@ public class SnakeProcess extends ImageProcess<BinaryImage> {
 
     /**
      * Calculate de flow force
-     * 
+     *
      * @param cur
      * @param p
      * @param flow
@@ -302,8 +306,8 @@ public class SnakeProcess extends ImageProcess<BinaryImage> {
     }
 
     /**
-     * Calculate the inertial force 
-     * 
+     * Calculate the inertial force
+     *
      * @param cur
      * @param p
      * @param gradient
@@ -313,6 +317,58 @@ public class SnakeProcess extends ImageProcess<BinaryImage> {
         double d = this.distance2D(cur, p);
         double g = gradient[cur.x][cur.y];
         return g * d;
+    }
+
+    /**
+     * Removes the overlapping points
+     * 
+     * @param points
+     * @param minlen 
+     */
+    private void removeOverlappingPoints(List<Point> points, int minlen) {
+        for (int i = 0; i < points.size(); i++) {
+            Point cur = points.get(i);
+            int di = 1 + points.size() / 2;
+            while (di > 0) {
+                Point end = points.get((i + di) % points.size());
+                double dist = distance2D(cur, end);
+                if (dist <= (double) minlen) {
+                    for (int k = 0; k < di; k++) {
+                        points.remove((i + 1) % points.size());
+                    }
+                    break;
+                }
+                di--;
+            }
+        }
+    }
+
+    /**
+     * Adds missing points
+     * 
+     * @param points
+     * @param maxlen 
+     */
+    private void addMissingPoints(List<Point> points, int maxlen) {
+        int i = 0;
+        while (i < points.size()) {
+            Point prev = points.get((i + points.size() - 1) % points.size());
+            Point cur = points.get(i);
+            Point next = points.get((i + 1) % points.size());
+            Point next2 = points.get((i + 2) % points.size());
+            if (distance2D(cur, next) > (double) maxlen) {
+                double c0 = 0.020833333333333332;
+                double c1 = 0.4791666666666667;
+                double c2 = 0.4791666666666667;
+                double c3 = 0.020833333333333332;
+                double x = (double) prev.x * c3 + (double) cur.x * c2 + (double) next.x * c1 + (double) next2.x * c0;
+                double y = (double) prev.y * c3 + (double) cur.y * c2 + (double) next.y * c1 + (double) next2.y * c0;
+                Point newpoint = new Point((int) (0.5 + x), (int) (0.5 + y));
+                points.add(i + 1, newpoint);
+                --i;
+            }
+            ++i;
+        }
     }
 
     private static class ChamferDistance {
