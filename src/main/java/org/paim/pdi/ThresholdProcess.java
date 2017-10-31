@@ -1,5 +1,6 @@
 package org.paim.pdi;
 
+import org.paim.commons.BinaryImage;
 import org.paim.commons.Image;
 
 /**
@@ -9,8 +10,10 @@ import org.paim.commons.Image;
  * the threshold, and the higher boundary if the pixel is <b> higher than or 
  * equal to</b> the boundary.
  */
-public class ThresholdProcess extends PixelProcess<Image> {
-
+public class ThresholdProcess extends PixelProcess<BinaryImage> {
+    
+    /** */
+    private final BinaryImage out;
     /** Threshold */
     private final int threshold;
 
@@ -23,14 +26,15 @@ public class ThresholdProcess extends PixelProcess<Image> {
     public ThresholdProcess(Image image, int threshold) {
         super(image);
         this.threshold = threshold;
+        this.out = new BinaryImage(image);
         setFinalizer(() -> {
-            setOutput(image);
+            setOutput(out);
         });
     }
 
     @Override
     protected void process(int channel, int x, int y, int value) {
-        image.set(channel, x, y, applyThreshold(value));
+        out.set(channel, x, y, applyThreshold(value));
     }
 
     /**
