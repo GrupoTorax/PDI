@@ -1,10 +1,7 @@
 package org.paim.pdi;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import org.paim.commons.BinaryImage;
 import org.paim.commons.BinaryLabeling;
 import org.paim.commons.Image;
 
@@ -124,141 +121,13 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
                 }
                 ExtractedObject object = map.get(label);
                 if (object == null) {
-                    object = new ExtractedObject(label);
+                    object = new ExtractedObject(label, out);
                     map.put(label, object);
                 }
-                object.size++;
+                object.incrementSize();
             }
         }
         return new ObjectList(map.values());
     }
     
-    /**
-     * Object list identified by the process
-     */
-    public class ObjectList extends ArrayList<ExtractedObject> {
-
-        /**
-         * Creates a new Object list based on a collection
-         * @param collection 
-         */
-        public ObjectList(Collection<ExtractedObject> collection) {
-            super(collection);
-        }
-        
-        /**
-         * Sorts by size in decrescent order (Largest first)
-         * 
-         * @return the same list
-         */
-        public ObjectList sortBySizeLargestFirst() {
-            sort((ExtractedObject o1, ExtractedObject o2) -> {
-                return o2.size - o1.size;
-            });
-            return this;
-        }
-
-        @Override
-        public ObjectList subList(int fromIndex, int toIndex) {
-            return new ObjectList(super.subList(fromIndex, toIndex));
-        }
-
-        /**
-         * Returns a subset of this list
-         * 
-         * @param size
-         * @return ObjectList
-         */
-        public ObjectList subList(int size) {
-            return new ObjectList(super.subList(0, size));
-        }
-        
-    }
-    
-    /**
-     * Extracted object
-     */
-    public class ExtractedObject {
-        
-        /** Label of this object */
-        private final int label;
-        /** Matrix of this object */
-        private final BinaryImage matrix;
-        /** Size */
-        private int size;
-        /** Perimeter */
-        private int perimeter;
-        /**
-         * Creates a new extracted object
-         * 
-         * @param label
-         */
-        public ExtractedObject(int label) {
-            this.label = label;
-            this.matrix = new BinaryImage(out, label);
-            this.size = 0;
-            this.perimeter = -1;
-        }
-
-        /**
-         * Returns the label of this object
-         * 
-         * @return int
-         */
-        public int getLabel() {
-            return label;
-        }
-
-        /**
-         * Returns the matrix of this object
-         * 
-         * @return BinaryImage
-         */
-        public BinaryImage getMatrix() {
-            return matrix;
-        }
-
-        /**
-         * Returns the size of this object (Area)
-         * 
-         * @return int
-         */
-        public int getSize() {
-            return size;
-        }
-        
-        public int getPerimeter() {
-            if (perimeter == -1) {
-                perimeter = 0;
-                for (int x = 0; x < matrix.getWidth(); x++) {
-                    for (int y = 0; y < matrix.getHeight(); y++) {
-                        if(matrix.get(x, y)) {
-                            if (x == 0 || y == 0 || x == matrix.getWidth() - 1 || y == matrix.getHeight() - 1) {
-                                perimeter++;
-                            } else {
-                                if(!matrix.get(x, y - 1) || !matrix.get(x - 1, y) || !matrix.get(x + 1, y) || !matrix.get(x, y + 1)) {
-                                    perimeter++;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return perimeter;
-        }
-        
-        public double getCircularity() {
-            double p = getPerimeter();
-            double a = getSize();
-            double c = (p * p) / (4 * Math.PI * a);
-            return c;
-        }
-
-        @Override
-        public String toString() {
-            return "ExtractedObject{" + "label=" + label + ", matrix=" + matrix + ", size=" + size + '}';
-        }
-        
-    }
-
 }
