@@ -43,6 +43,7 @@ public class MedianBlurProcess  extends SimpleConvolutionProcess {
                     values[j + 1] = values[j];
                 }
                 values[i] = newValue;
+                break;
             }
         }
     }
