@@ -44,7 +44,7 @@ public abstract class SimpleKernelConvolution extends ImageProcess<Image> {
         double valueKernel = 0;
         int ksize = kernel.length;
         int center = ksize - 2;
-        if (x > center && x < image.getHeight() - center && y > center && y < image.getHeight() - center) {
+        if (x > center && x < image.getWidth() - center && y > center && y < image.getHeight() - center) {
             for (int i = 0; i < ksize; i++) {
                 for (int j = 0; j < ksize; j++) {
                     int xPos = x + (i - center);
