@@ -5,7 +5,18 @@
  */
 package org.paim.pdi;
 
+import static com.sun.org.apache.xerces.internal.util.PropertyState.is;
+import static java.lang.ProcessBuilder.Redirect.to;
+import static java.time.Period.between;
+import java.util.Set;
 import java.util.Stack;
+import static java.util.regex.Pattern.matches;
+import static java.util.stream.Stream.of;
+import static javafx.beans.binding.Bindings.and;
+import static javafx.beans.binding.Bindings.equal;
+import static javafx.scene.input.KeyCode.N;
+import static javafx.scene.input.KeyCode.Q;
+import static javafx.scene.paint.Color.color;
 import org.paim.commons.Color;
 import org.paim.commons.Image;
 import org.paim.commons.ImageFactory;
@@ -22,8 +33,6 @@ public class FloodFillProcess extends ImageProcess<Image> {
     private final Color replacementColor;
     /** Output image */
     private final Image outputImage;
-    /** Processing stack */
-    private final Stack<Point> stack;
     /** Target color */
     private Color targetColor;
     
@@ -55,20 +64,17 @@ public class FloodFillProcess extends ImageProcess<Image> {
         this.outputImage = resultImage;
         this.seed = seed.compute(image);
         this.replacementColor = replacement;
-        this.stack = new Stack<>();
         setFinalizer(() -> {
-            stack.clear();
             setOutput(outputImage);
         });
     }
 
     @Override
     public void processImage() {
+        long l = System.currentTimeMillis();
         targetColor = image.getColor(seed.x, seed.y);
-        stack.add(seed);
-        while (!stack.empty()) {
-            processPoint(stack.pop());
-        }
+        processPoint(seed);
+        System.out.println(System.currentTimeMillis() - l);
     }
     
     /**
@@ -80,12 +86,24 @@ public class FloodFillProcess extends ImageProcess<Image> {
         if (!image.inBounds(point)) {
             return;
         }
-        if (outputImage.getColor(point.x, point.y).equals(targetColor)) {
-            outputImage.setColor(point.x, point.y, replacementColor);
-            stack.add(point.east());
-            stack.add(point.west());
-            stack.add(point.north());
-            stack.add(point.south());
+        if (!outputImage.getColor(point.x, point.y).equals(targetColor)) {
+            return;
+        }
+        Point node = point;
+        Point w = node;
+        Point e = node;
+        while (image.inBounds(w) && outputImage.getColor(w.x, w.y).equals(targetColor)) {
+            w = w.west();
+        }
+        while (image.inBounds(e) && outputImage.getColor(e.x, e.y).equals(targetColor)) {
+            e = e.east();
+        }
+        for (int x = w.x + 1; x < e.x; x++) {
+            outputImage.setColor(x, node.y, replacementColor);
+        }
+        for (int x = w.x + 1; x < e.x; x++) {
+            processPoint(new Point(x, node.y).north());
+            processPoint(new Point(x, node.y).south());
         }
     }
 
