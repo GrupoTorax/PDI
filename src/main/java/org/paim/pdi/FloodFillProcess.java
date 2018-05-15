@@ -71,10 +71,8 @@ public class FloodFillProcess extends ImageProcess<Image> {
 
     @Override
     public void processImage() {
-        long l = System.currentTimeMillis();
         targetColor = image.getColor(seed.x, seed.y);
         processPoint(seed);
-        System.out.println(System.currentTimeMillis() - l);
     }
     
     /**
