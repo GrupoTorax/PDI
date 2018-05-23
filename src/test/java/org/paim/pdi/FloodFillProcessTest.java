@@ -30,4 +30,19 @@ public class FloodFillProcessTest {
         ImageAssert.assertImage(expected, process.getOutput());
     }
     
+    @Test
+    public void testTargetEqualsReplacement() {
+        Image image = new Image(new int[][][]{
+            {
+                {10, 10, 10},
+                {10, 10, 10},
+                {10, 10, 10}
+            }
+        }, new Range<>(0, 100));
+        FloodFillProcess process = new FloodFillProcess(image, new Point(0, 0), new Color(10));
+        process.process();
+        Image expected = image;
+        ImageAssert.assertImage(expected, process.getOutput());
+    }
+    
 }
