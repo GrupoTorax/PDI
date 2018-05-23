@@ -5,18 +5,9 @@
  */
 package org.paim.pdi;
 
-import static com.sun.org.apache.xerces.internal.util.PropertyState.is;
-import static java.lang.ProcessBuilder.Redirect.to;
-import static java.time.Period.between;
-import java.util.Set;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
-import static java.util.regex.Pattern.matches;
-import static java.util.stream.Stream.of;
-import static javafx.beans.binding.Bindings.and;
-import static javafx.beans.binding.Bindings.equal;
-import static javafx.scene.input.KeyCode.N;
-import static javafx.scene.input.KeyCode.Q;
-import static javafx.scene.paint.Color.color;
 import org.paim.commons.Color;
 import org.paim.commons.Image;
 import org.paim.commons.ImageFactory;
@@ -35,6 +26,8 @@ public class FloodFillProcess extends ImageProcess<Image> {
     private final Image outputImage;
     /** Target color */
     private Color targetColor;
+    /** Queue */
+    private final Queue<Point> queue;
     
     /**
      * Creates a new process that iterates over the image pixels
@@ -55,7 +48,7 @@ public class FloodFillProcess extends ImageProcess<Image> {
             seed = Point.CENTER;
         }
         if (replacement == null) {
-            int[] color = new int[image.getChannelCount()];
+            int[] color = new int[resultImage.getChannelCount()];
             for (int i = 0; i < color.length; i++) {
                 color[i] = image.getPixelValueRange().getHigher();
             }
@@ -64,6 +57,7 @@ public class FloodFillProcess extends ImageProcess<Image> {
         this.outputImage = resultImage;
         this.seed = seed.compute(image);
         this.replacementColor = replacement;
+        queue = new LinkedList<>();
         setFinalizer(() -> {
             setOutput(outputImage);
         });
@@ -72,7 +66,13 @@ public class FloodFillProcess extends ImageProcess<Image> {
     @Override
     public void processImage() {
         targetColor = image.getColor(seed.x, seed.y);
-        processPoint(seed);
+        if (targetColor.equals(replacementColor)) {
+            return;
+        }
+        queue.add(seed);
+        while (!queue.isEmpty()) {
+            processPoint(queue.poll());
+        }
     }
     
     /**
@@ -100,9 +100,24 @@ public class FloodFillProcess extends ImageProcess<Image> {
             outputImage.setColor(x, node.y, replacementColor);
         }
         for (int x = w.x + 1; x < e.x; x++) {
-            processPoint(new Point(x, node.y).north());
-            processPoint(new Point(x, node.y).south());
+            push(new Point(x, node.y).north());
+            push(new Point(x, node.y).south());
         }
+    }
+
+    /**
+     * Pushes a point into the queue
+     * 
+     * @param p 
+     */
+    private void push(Point p) {
+        if (!image.inBounds(p)) {
+            return;
+        }
+        if (!outputImage.getColor(p.x, p.y).equals(targetColor)) {
+            return;
+        }
+        queue.add(p);
     }
 
 }
