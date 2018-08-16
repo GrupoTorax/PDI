@@ -22,7 +22,7 @@ public class ResizeProcessTest {
                 {3, 23, 50, 38, 80}
             }
         }, new Range<>(0, 100));
-        ResizeProcess process = new ResizeProcess(image, 2);
+        ResizeProcess process = new ResizeProcess(image, 2, 2);
         process.process();
         Image expected = new Image(new int[][][]{
             {
@@ -56,7 +56,7 @@ public class ResizeProcessTest {
                 {3, 24, 57, 35, 60}
             }
         }, new Range<>(0, 100));
-        ResizeProcess process = new ResizeProcess(image, 2);
+        ResizeProcess process = new ResizeProcess(image, 2, 2);
         process.process();
         Image expected = new Image(new int[][][]{
             {
