@@ -1,9 +1,12 @@
 package org.paim.pdi;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import org.paim.commons.BinaryLabeling;
 import org.paim.commons.Image;
+import org.paim.commons.Point;
 
 /**
  * Binary labeling process
@@ -16,6 +19,8 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
     private final Image out;
     /** Index label */
     private int indexLabel;
+    /** Queue */
+    private final Queue<Point> queue;
 
     /**
      * Creates a new BinaryLabeling process
@@ -26,6 +31,7 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
         super(image);
         this.out = new Image(this.image);
         this.indexLabel = INITIAL_LABEL;
+        this.queue = new LinkedList<>();
         setFinalizer(() -> {
             setOutput(new BinaryLabeling(out, indexLabel - INITIAL_LABEL));
         });
@@ -34,7 +40,11 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
     @Override
     protected void process(int channel, int x, int y, int value) {
         if (out.get(channel, x, y) == 1) {
-            compareLabel(channel, x, y, indexLabel++);
+            queue.add(new Point(x, y));
+            while (!queue.isEmpty()) {
+                compareLabel(channel, queue.poll(), indexLabel);
+            }
+            indexLabel++;
         }
     }
 
@@ -93,16 +103,18 @@ public class BinaryLabelingProcess extends PixelProcess<BinaryLabeling> {
      * @param y
      * @param index
      */
-    private void compareLabel(int channel, int x, int y, int index) {
+    private void compareLabel(int channel, Point point, int index) {
+        int x = point.x;
+        int y = point.y;
         if (x < 0 || x >= out.getWidth() || y < 0 || y >= out.getHeight()) {
             return;
         }
         if (out.get(channel, x, y) == 1) {
             out.set(channel, x, y, index);
-            compareLabel(channel, x - 1, y, index);
-            compareLabel(channel, x, y - 1, index);
-            compareLabel(channel, x, y + 1, index);
-            compareLabel(channel, x + 1, y, index);
+            queue.add(new Point(x - 1, y));
+            queue.add(new Point(x, y - 1));
+            queue.add(new Point(x, y + 1));
+            queue.add(new Point(x + 1, y));
         }
     }
     

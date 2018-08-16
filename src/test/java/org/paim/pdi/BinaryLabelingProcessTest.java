@@ -68,6 +68,21 @@ public class BinaryLabelingProcessTest {
         assertArrayEquals(label2, process.getMatrix(2));
         assertArrayEquals(label3, process.getMatrix(3));
     }
+    
+    /**
+     * Tests a big image to see if the stack will overflow
+     */
+    @Test
+    public void testStackOverflow() {
+        int[][][] image = new int[1][6000][6000];
+        for (int x = 0; x < image[0].length; x++) {
+            for (int y = 0; y < image[0][0].length; y++) {
+                image[0][x][y] = 1;
+            }
+        }
+        BinaryLabelingProcess process = new BinaryLabelingProcess(new Image(image, new Range<>(-100, 100)));
+        process.process();
+    }
 
     /**
      * Creates the test image
