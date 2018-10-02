@@ -2,6 +2,7 @@ package org.paim.pdi;
 
 import org.paim.commons.BinaryImage;
 import org.paim.commons.Image;
+import org.paim.commons.ImageFactory;
 
 /**
  * Process for applying a binary threshold on a image.
@@ -26,7 +27,10 @@ public class ThresholdProcess extends PixelProcess<BinaryImage> {
     public ThresholdProcess(Image image, int threshold) {
         super(image);
         this.threshold = threshold;
-        this.out = new BinaryImage(image);
+        this.out = new BinaryImage(ImageFactory.buildBinaryImage(
+                image.getWidth(), 
+                image.getHeight()
+        ));
         setFinalizer(() -> {
             setOutput(out);
         });
@@ -34,21 +38,18 @@ public class ThresholdProcess extends PixelProcess<BinaryImage> {
 
     @Override
     protected void process(int channel, int x, int y, int value) {
-        out.set(channel, x, y, applyThreshold(value));
+        boolean higher = isHigherThreshold(value);
+        out.set(x, y, higher);
     }
 
     /**
-     * Apply the threshold
+     * Returns true if the threshold is higher
      * 
      * @param value
-     * @return 
+     * @return boolean
      */
-    private int applyThreshold(int value) {
-        if (value < threshold) {
-            return image.getPixelValueRange().getLower();
-        } else {
-            return image.getPixelValueRange().getHigher();
-        }
+    private boolean isHigherThreshold(int value) {
+        return value >= threshold;
     }
 
 }
