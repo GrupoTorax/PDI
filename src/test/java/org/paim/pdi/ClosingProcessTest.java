@@ -17,10 +17,10 @@ public class ClosingProcessTest {
     public void testSingleChannelImage() {
         Image image = new Image(new int[][][] {
             {
-                {30,  0, 30, 30, 30},
-                {30,  0, 30, 30, 30},
-                {30,  0, 30, 30, 30},
-                {30, 30,  0,  0, 30},
+                {0,  0, 30, 30, 0},
+                {0,  0,  0, 30, 0},
+                {0,  0,  0, 30, 0},
+                {0,  0,  0,  0, 0},
             }
         }, new Range<>(0, 100));
         ClosingProcess process = new ClosingProcess(image);
@@ -29,11 +29,11 @@ public class ClosingProcessTest {
         ImageAssert.assertImage(new Image(new int[][][] {
             {
                 {0, 0, 30, 30, 30},
-                {0, 0, 30, 30, 30},
-                {0, 0, 30, 30, 30},
-                {0, 0,  0,  0,  0},
+                {0, 0,  0, 30, 30},
+                {0, 0,  0, 30, 30},
+                {0, 0,  0, 30, 30},
             }
-        }, new Range<>(0, 100)), output);
+        }, new Range<>(0, 100)), output);        
     }
 
 }

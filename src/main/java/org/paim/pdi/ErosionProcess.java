@@ -18,15 +18,15 @@ public class ErosionProcess extends SimpleConvolutionProcess {
 
     @Override
     protected int computeCenter(int[][] neighbours) {
-        int largest = 0;
+        int smallest = Integer.MAX_VALUE;
         for (int x = 0; x < neighbours.length; x++) {
             for (int y = 0; y < neighbours[x].length; y++) {
-                if (neighbours[x][y] > largest) {
-                    largest = neighbours[x][y];
+                if (neighbours[x][y] < smallest) {
+                    smallest = neighbours[x][y];
                 }
             }
         }
-        return largest;
+        return smallest;
     }
 
 }

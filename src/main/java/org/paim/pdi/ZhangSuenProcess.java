@@ -38,8 +38,8 @@ public class ZhangSuenProcess extends SkeletonProcess {
                     return 0;
                 }
             } else {
-                if ((neighborhood[6] * neighborhood[0] * neighborhood[2] == 0) && 
-                        (neighborhood[0] * neighborhood[6] * neighborhood[4] == 0)) {
+                if ((neighborhood[4] * neighborhood[0] * neighborhood[2] == 0) && 
+                        (neighborhood[2] * neighborhood[4] * neighborhood[6] == 0)) {
                     return 0;
                 }
             }
